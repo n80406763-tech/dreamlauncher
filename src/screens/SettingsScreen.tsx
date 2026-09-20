@@ -3,6 +3,9 @@ import { Panel } from "../components/ui/Panel";
 import { Button } from "../components/ui/Button";
 import { open } from "@tauri-apps/plugin-shell";
 import { appDataDir } from "@tauri-apps/api/path";
+import { check } from "@tauri-apps/plugin-updater";
+import { ask, message } from "@tauri-apps/plugin-dialog";
+import { relaunch } from "@tauri-apps/plugin-process";
 
 export function SettingsScreen() {
   const [dataPath, setDataPath] = useState<string>("");
@@ -64,19 +67,30 @@ export function SettingsScreen() {
         </div>
       </Panel>
 
-      {/* Внешний вид */}
+      {/* Внешний вид и язык */}
       <Panel className="flex flex-col gap-3">
         <div className="font-pixel text-sm" style={{ fontFamily: "var(--font-pixel)", color: "var(--text-hi)" }}>
-          Внешний вид
+          Внешний вид и Язык
         </div>
         <div className="flex flex-col gap-2">
           <div className="flex items-center justify-between gap-4">
             <div className="flex flex-col gap-1">
+              <div className="text-sm" style={{ color: "var(--text-hi)" }}>Язык интерфейса</div>
+              <div className="text-xs" style={{ color: "var(--text-dim)" }}>Выберите язык / Select language</div>
+            </div>
+            <select className="field" onChange={(e) => {}} defaultValue="ru">
+              <option value="ru">Русский</option>
+              <option value="en">English</option>
+            </select>
+          </div>
+          
+          <div className="flex items-center justify-between gap-4 mt-2">
+            <div className="flex flex-col gap-1">
               <div className="text-sm" style={{ color: "var(--text-hi)" }}>Тема оформления</div>
-              <div className="text-xs" style={{ color: "var(--text-dim)" }}>Темная тема с фиолетовыми акцентами</div>
+              <div className="text-xs" style={{ color: "var(--text-dim)" }}>Темная тема с космическими акцентами</div>
             </div>
             <div className="text-sm" style={{ color: "var(--text-dim)" }}>
-              Настройка появится в M9
+              Авто
             </div>
           </div>
         </div>
@@ -90,12 +104,29 @@ export function SettingsScreen() {
         <div className="flex flex-col gap-2">
           <div className="flex items-center justify-between gap-4">
             <div className="flex flex-col gap-1">
-              <div className="text-sm" style={{ color: "var(--text-hi)" }}>Автоматическая проверка обновлений</div>
-              <div className="text-xs" style={{ color: "var(--text-dim)" }}>Проверять наличие новых версий при запуске</div>
+              <div className="text-sm" style={{ color: "var(--text-hi)" }}>Версия приложения</div>
+              <div className="text-xs" style={{ color: "var(--text-dim)" }}>Проверка наличия новых версий лаунчера</div>
             </div>
-            <div className="text-sm" style={{ color: "var(--text-dim)" }}>
-              Настройка появится в M9
-            </div>
+            <Button onClick={async () => {
+              try {
+                const update = await check();
+                if (update) {
+                  const yes = await ask(`Доступно обновление ${update.version}.\n\nХотите установить его сейчас?`, { title: "Обновление", kind: "info" });
+                  if (yes) {
+                    await update.downloadAndInstall((event) => {
+                      // could log progress
+                    });
+                    await relaunch();
+                  }
+                } else {
+                  await message("У вас установлена самая последняя версия.", { title: "Обновлений нет", kind: "info" });
+                }
+              } catch (e) {
+                await message(`Ошибка при проверке обновлений: ${e}`, { title: "Ошибка", kind: "error" });
+              }
+            }}>
+              Проверить обновления
+            </Button>
           </div>
         </div>
       </Panel>

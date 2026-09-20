@@ -13,22 +13,43 @@ use tokio::sync::mpsc;
 /// безопасно вызывать перед каждым запуском игры.
 #[tauri::command]
 #[specta::specta]
-pub async fn install_version(state: tauri::State<'_, AppState>, instance_id: String, channel: Channel<InstallProgressEvent>) -> Result<()> {
+pub async fn install_version(
+    state: tauri::State<'_, AppState>,
+    instance_id: String,
+    channel: Channel<InstallProgressEvent>,
+) -> Result<()> {
     let (slug, mc_version, loader, loader_version) = {
         let db = state.db.lock().expect("db mutex poisoned");
-        db.query_row("SELECT slug, mc_version, loader, loader_version FROM instances WHERE id = ?1", [&instance_id], |r| {
-            Ok((r.get::<_, String>(0)?, r.get::<_, String>(1)?, r.get::<_, String>(2)?, r.get::<_, Option<String>>(3)?))
-        })
+        db.query_row(
+            "SELECT slug, mc_version, loader, loader_version FROM instances WHERE id = ?1",
+            [&instance_id],
+            |r| {
+                Ok((
+                    r.get::<_, String>(0)?,
+                    r.get::<_, String>(1)?,
+                    r.get::<_, String>(2)?,
+                    r.get::<_, Option<String>>(3)?,
+                ))
+            },
+        )
         .map_err(|_| DreamError::Other(format!("инстанс {instance_id} не найден")))?
     };
 
-    let version_ref = VersionRef { mc_version, loader: parse_loader(&loader)?, loader_version };
+    let version_ref = VersionRef {
+        mc_version,
+        loader: parse_loader(&loader)?,
+        loader_version,
+    };
 
-    let _ = channel.send(InstallProgressEvent::Phase { message: "Получаем метаданные версии…".into() });
+    let _ = channel.send(InstallProgressEvent::Phase {
+        message: "Получаем метаданные версии…".into(),
+    });
     let plan = match install::plan_install(&state.http, &state.paths, &version_ref).await {
         Ok(p) => p,
         Err(e) => {
-            let _ = channel.send(InstallProgressEvent::Error { message: e.to_string() });
+            let _ = channel.send(InstallProgressEvent::Error {
+                message: e.to_string(),
+            });
             return Err(e.into());
         }
     };
@@ -43,7 +64,9 @@ pub async fn install_version(state: tauri::State<'_, AppState>, instance_id: Str
         while let Some(event) = rx.recv().await {
             match event {
                 install::InstallEvent::Phase(message) => {
-                    let _ = forward_channel.send(InstallProgressEvent::Phase { message: message.to_string() });
+                    let _ = forward_channel.send(InstallProgressEvent::Phase {
+                        message: message.to_string(),
+                    });
                 }
                 install::InstallEvent::Download(DownloadEvent::ItemFailed { url, error }) => {
                     done += 1;
@@ -62,7 +85,9 @@ pub async fn install_version(state: tauri::State<'_, AppState>, instance_id: Str
     let _ = forward.await;
 
     if let Err(e) = result {
-        let _ = channel.send(InstallProgressEvent::Error { message: e.to_string() });
+        let _ = channel.send(InstallProgressEvent::Error {
+            message: e.to_string(),
+        });
         return Err(e.into());
     }
 
@@ -70,7 +95,9 @@ pub async fn install_version(state: tauri::State<'_, AppState>, instance_id: Str
     // ассетов прямо в папку ЭТОГО инстанса; для всех остальных версий
     // ничего не делает (см. doc-комментарий `ensure_map_to_resources`).
     if let Err(e) = install::ensure_map_to_resources(&plan, &state.paths.instance_game_dir(&slug)) {
-        let _ = channel.send(InstallProgressEvent::Error { message: e.to_string() });
+        let _ = channel.send(InstallProgressEvent::Error {
+            message: e.to_string(),
+        });
         return Err(e.into());
     }
 

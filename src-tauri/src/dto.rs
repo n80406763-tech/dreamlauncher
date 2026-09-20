@@ -27,11 +27,18 @@ pub struct VersionManifestDto {
 impl From<dream_core::meta::VersionManifest> for VersionManifestDto {
     fn from(m: dream_core::meta::VersionManifest) -> Self {
         Self {
-            latest: LatestVersionsDto { release: m.latest.release, snapshot: m.latest.snapshot },
+            latest: LatestVersionsDto {
+                release: m.latest.release,
+                snapshot: m.latest.snapshot,
+            },
             versions: m
                 .versions
                 .into_iter()
-                .map(|v| VersionEntryDto { id: v.id, kind: format!("{:?}", v.kind).to_lowercase(), release_time: v.release_time })
+                .map(|v| VersionEntryDto {
+                    id: v.id,
+                    kind: format!("{:?}", v.kind).to_lowercase(),
+                    release_time: v.release_time,
+                })
                 .collect(),
         }
     }
@@ -84,13 +91,23 @@ pub struct UpdateInstanceRequest {
 #[derive(Debug, Clone, Serialize, Type)]
 #[serde(tag = "type")]
 pub enum InstallProgressEvent {
-    Phase { message: String },
+    Phase {
+        message: String,
+    },
     /// `done`/`total` считаются по файлам (не по байтам) — событие
     /// приходит на каждый обработанный файл.
-    Progress { done: u32, total: u32 },
-    ItemFailed { url: String, error: String },
+    Progress {
+        done: u32,
+        total: u32,
+    },
+    ItemFailed {
+        url: String,
+        error: String,
+    },
     Done,
-    Error { message: String },
+    Error {
+        message: String,
+    },
 }
 
 /// События запущенного процесса игры.
@@ -126,13 +143,24 @@ pub struct ModSearchResultDto {
 
 impl From<dream_core::mods::modrinth::SearchHit> for ModSearchHitDto {
     fn from(h: dream_core::mods::modrinth::SearchHit) -> Self {
-        Self { project_id: h.project_id, slug: h.slug, title: h.title, description: h.description, author: h.author, downloads: h.downloads.min(u32::MAX as u64) as u32, icon_url: h.icon_url }
+        Self {
+            project_id: h.project_id,
+            slug: h.slug,
+            title: h.title,
+            description: h.description,
+            author: h.author,
+            downloads: h.downloads.min(u32::MAX as u64) as u32,
+            icon_url: h.icon_url,
+        }
     }
 }
 
 impl From<dream_core::mods::SearchResponse> for ModSearchResultDto {
     fn from(r: dream_core::mods::SearchResponse) -> Self {
-        Self { hits: r.hits.into_iter().map(Into::into).collect(), total_hits: r.total_hits.min(u32::MAX as u64) as u32 }
+        Self {
+            hits: r.hits.into_iter().map(Into::into).collect(),
+            total_hits: r.total_hits.min(u32::MAX as u64) as u32,
+        }
     }
 }
 
@@ -160,7 +188,10 @@ pub struct ShaderSearchResultDto {
 
 impl From<dream_core::mods::SearchResponse> for ShaderSearchResultDto {
     fn from(r: dream_core::mods::SearchResponse) -> Self {
-        Self { hits: r.hits.into_iter().map(Into::into).collect(), total_hits: r.total_hits.min(u32::MAX as u64) as u32 }
+        Self {
+            hits: r.hits.into_iter().map(Into::into).collect(),
+            total_hits: r.total_hits.min(u32::MAX as u64) as u32,
+        }
     }
 }
 
@@ -168,14 +199,23 @@ impl From<dream_core::mods::SearchResponse> for ShaderSearchResultDto {
 #[derive(Debug, Clone, Serialize, Type)]
 #[serde(tag = "type")]
 pub enum AuthProgressDto {
-    WaitingForUser { user_code: String, verification_uri: String, expires_in: u32 },
+    WaitingForUser {
+        user_code: String,
+        verification_uri: String,
+        expires_in: u32,
+    },
     Polling,
     ExchangingXboxLive,
     ExchangingXsts,
     LoggingIntoMinecraft,
     FetchingProfile,
-    Complete { uuid: String, username: String },
-    Error { message: String },
+    Complete {
+        uuid: String,
+        username: String,
+    },
+    Error {
+        message: String,
+    },
 }
 
 /// Крэш-репорт Minecraft.

@@ -7,7 +7,10 @@ use crate::state::AppState;
 /// Query), поэтому пока просто игнорируется.
 #[tauri::command]
 #[specta::specta]
-pub async fn versions_manifest(state: tauri::State<'_, AppState>, _refresh: bool) -> Result<VersionManifestDto> {
+pub async fn versions_manifest(
+    state: tauri::State<'_, AppState>,
+    _refresh: bool,
+) -> Result<VersionManifestDto> {
     let manifest = dream_core::meta::fetch_version_manifest(&state.http).await?;
     Ok(manifest.into())
 }

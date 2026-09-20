@@ -29,6 +29,14 @@
       "csp": null
     }
   },
+  "plugins": {
+    "updater": {
+      "endpoints": [
+        "https://github.com/n80406763-tech/dreamlauncher/releases/latest/download/updater.json"
+      ],
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDlCQzg1NUY1MkEyMzcxMzgKUlVUTE9RQUFBQUFDMEFBQUFBRUFBRUFBQkFBQUEzQUFBQUFBQUREdDBkQXRxb0N2cUpQOHhHczN3MEdhQnp2QitCdzVCRmdjNGFPNFpUSnhmUkpCMEJBMU1NMHd4c2xPTnZ2TUVUaFFZTXVCRnZnPQo="
+    }
+  },
   "bundle": {
     "active": true,
     "targets": "all",

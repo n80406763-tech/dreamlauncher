@@ -11,7 +11,11 @@ use tauri::ipc::Channel;
 /// Java просто упадёт с понятной ошибкой в stderr, который уходит в канал.
 #[tauri::command]
 #[specta::specta]
-pub async fn launch_instance(state: tauri::State<'_, AppState>, instance_id: String, channel: Channel<LaunchEventDto>) -> Result<()> {
+pub async fn launch_instance(
+    state: tauri::State<'_, AppState>,
+    instance_id: String,
+    channel: Channel<LaunchEventDto>,
+) -> Result<()> {
     let (slug, mc_version, loader, loader_version, min_ram_mb, max_ram_mb, extra_jvm_args) = {
         let db = state.db.lock().expect("db mutex poisoned");
         db.query_row(
@@ -34,14 +38,30 @@ pub async fn launch_instance(state: tauri::State<'_, AppState>, instance_id: Str
 
     let (account_id, username, account_kind) = {
         let db = state.db.lock().expect("db mutex poisoned");
-        db.query_row("SELECT id, username, kind FROM accounts WHERE is_active = 1", [], |r| Ok((r.get::<_, String>(0)?, r.get::<_, String>(1)?, r.get::<_, String>(2)?)))
-            .map_err(|_| DreamError::Other("нет активного аккаунта — добавьте его на экране «Аккаунты»".into()))?
+        db.query_row(
+            "SELECT id, username, kind FROM accounts WHERE is_active = 1",
+            [],
+            |r| {
+                Ok((
+                    r.get::<_, String>(0)?,
+                    r.get::<_, String>(1)?,
+                    r.get::<_, String>(2)?,
+                ))
+            },
+        )
+        .map_err(|_| {
+            DreamError::Other("нет активного аккаунта — добавьте его на экране «Аккаунты»".into())
+        })?
     };
     if account_kind != "offline" {
         return Err(DreamError::Other("запуск с Microsoft-аккаунтом пока не поддерживается (нужна авторизация, см. план, M3) — переключитесь на офлайн-профиль".into()));
     }
 
-    let version_ref = VersionRef { mc_version, loader: parse_loader(&loader)?, loader_version };
+    let version_ref = VersionRef {
+        mc_version,
+        loader: parse_loader(&loader)?,
+        loader_version,
+    };
 
     let _ = channel.send(LaunchEventDto::Starting);
     let plan = install::plan_install(&state.http, &state.paths, &version_ref).await?;
@@ -61,14 +81,19 @@ pub async fn launch_instance(state: tauri::State<'_, AppState>, instance_id: Str
             game_directory: state.paths.instance_game_dir(&slug),
             min_ram_mb: min_ram_mb as u32,
             max_ram_mb: max_ram_mb as u32,
-            extra_jvm_args: extra_jvm_args.split_whitespace().map(str::to_string).collect(),
+            extra_jvm_args: extra_jvm_args
+                .split_whitespace()
+                .map(str::to_string)
+                .collect(),
             width: None,
             height: None,
             quick_play: None,
         },
     );
 
-    let mut rx = launch::spawn(&cmd).await.map_err(|e| DreamError::Other(format!("не удалось запустить Java: {e}")))?;
+    let mut rx = launch::spawn(&cmd)
+        .await
+        .map_err(|e| DreamError::Other(format!("не удалось запустить Java: {e}")))?;
     while let Some(event) = rx.recv().await {
         let dto = match event {
             launch::LaunchEvent::Stdout(line) => LaunchEventDto::Stdout { line },

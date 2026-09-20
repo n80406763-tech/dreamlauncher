@@ -6,9 +6,18 @@ use dream_core::launch::{find_recent_crashes, read_crash_report};
 /// Ищет свежие крэш-репорты для инстанса (до 5 штук).
 #[tauri::command]
 #[specta::specta]
-pub fn crashes_list(state: tauri::State<'_, AppState>, instance_id: String) -> Result<Vec<CrashReportDto>> {
+pub fn crashes_list(
+    state: tauri::State<'_, AppState>,
+    instance_id: String,
+) -> Result<Vec<CrashReportDto>> {
     let db = state.db.lock().expect("db mutex poisoned");
-    let slug: String = db.query_row("SELECT slug FROM instances WHERE id = ?1", [&instance_id], |r| r.get(0)).map_err(|_| DreamError::Other(format!("инстанс {instance_id} не найден")))?;
+    let slug: String = db
+        .query_row(
+            "SELECT slug FROM instances WHERE id = ?1",
+            [&instance_id],
+            |r| r.get(0),
+        )
+        .map_err(|_| DreamError::Other(format!("инстанс {instance_id} не найден")))?;
     drop(db);
 
     let game_dir = state.paths.instance_game_dir(&slug);

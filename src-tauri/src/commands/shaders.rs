@@ -11,14 +11,29 @@ use tokio::sync::mpsc;
 
 fn instance_row(state: &AppState, instance_id: &str) -> Result<(String, String, String)> {
     let db = state.db.lock().expect("db mutex poisoned");
-    db.query_row("SELECT slug, mc_version, loader FROM instances WHERE id = ?1", [instance_id], |r| Ok((r.get::<_, String>(0)?, r.get::<_, String>(1)?, r.get::<_, String>(2)?)))
-        .map_err(|_| DreamError::Other(format!("инстанс {instance_id} не найден")))
+    db.query_row(
+        "SELECT slug, mc_version, loader FROM instances WHERE id = ?1",
+        [instance_id],
+        |r| {
+            Ok((
+                r.get::<_, String>(0)?,
+                r.get::<_, String>(1)?,
+                r.get::<_, String>(2)?,
+            ))
+        },
+    )
+    .map_err(|_| DreamError::Other(format!("инстанс {instance_id} не найден")))
 }
 
 /// Поиск шейдер-паков для версии игры инстанса.
 #[tauri::command]
 #[specta::specta]
-pub async fn shaders_search(state: tauri::State<'_, AppState>, instance_id: String, query: String, offset: u32) -> Result<ShaderSearchResultDto> {
+pub async fn shaders_search(
+    state: tauri::State<'_, AppState>,
+    instance_id: String,
+    query: String,
+    offset: u32,
+) -> Result<ShaderSearchResultDto> {
     let (_, mc_version, _) = instance_row(&state, &instance_id)?;
     let result = modrinth::search_shaders(&state.http, &query, &mc_version, 20, offset).await?;
     Ok(result.into())
@@ -26,12 +41,19 @@ pub async fn shaders_search(state: tauri::State<'_, AppState>, instance_id: Stri
 
 #[tauri::command]
 #[specta::specta]
-pub fn shaders_list(state: tauri::State<'_, AppState>, instance_id: String) -> Result<Vec<InstalledShaderDto>> {
+pub fn shaders_list(
+    state: tauri::State<'_, AppState>,
+    instance_id: String,
+) -> Result<Vec<InstalledShaderDto>> {
     let db = state.db.lock().expect("db mutex poisoned");
 
     // Получаем active_shader_id из instances
     let active_shader_id: Option<String> = db
-        .query_row("SELECT active_shader_id FROM instances WHERE id = ?1", [&instance_id], |r| r.get(0))
+        .query_row(
+            "SELECT active_shader_id FROM instances WHERE id = ?1",
+            [&instance_id],
+            |r| r.get(0),
+        )
         .ok();
 
     let mut stmt = db.prepare("SELECT project_id, version_id, filename FROM installed_content WHERE instance_id = ?1 AND content_type = 'shader' ORDER BY filename")?;
@@ -42,7 +64,7 @@ pub fn shaders_list(state: tauri::State<'_, AppState>, instance_id: String) -> R
             project_id,
             version_id: r.get(1)?,
             filename: r.get(2)?,
-            is_active
+            is_active,
         })
     })?;
     Ok(rows.collect::<rusqlite::Result<Vec<_>>>()?)
@@ -51,7 +73,11 @@ pub fn shaders_list(state: tauri::State<'_, AppState>, instance_id: String) -> R
 /// Устанавливает шейдер-пак. Автоматически проверяет наличие Iris/OptiFine.
 #[tauri::command]
 #[specta::specta]
-pub async fn shaders_install(state: tauri::State<'_, AppState>, instance_id: String, project_id: String) -> Result<String> {
+pub async fn shaders_install(
+    state: tauri::State<'_, AppState>,
+    instance_id: String,
+    project_id: String,
+) -> Result<String> {
     let (slug, mc_version, loader) = instance_row(&state, &instance_id)?;
     let loader_kind = parse_loader(&loader)?;
 
@@ -77,14 +103,28 @@ pub async fn shaders_install(state: tauri::State<'_, AppState>, instance_id: Str
 
     // Для шейдеров загрузчик не важен - работают на всех
     let versions = modrinth::list_versions(&state.http, &project_id, &[], &mc_version).await?;
-    let best = modrinth::pick_best_version(&versions).ok_or_else(|| DreamError::Other(format!("для {project_id} нет версии, совместимой с {mc_version}")))?;
-    let file = best.primary_file().ok_or_else(|| DreamError::Other(format!("у версии {} проекта {project_id} нет файлов", best.id)))?;
+    let best = modrinth::pick_best_version(&versions).ok_or_else(|| {
+        DreamError::Other(format!(
+            "для {project_id} нет версии, совместимой с {mc_version}"
+        ))
+    })?;
+    let file = best.primary_file().ok_or_else(|| {
+        DreamError::Other(format!(
+            "у версии {} проекта {project_id} нет файлов",
+            best.id
+        ))
+    })?;
 
     let dest = shaderpacks_dir.join(&file.filename);
     let (tx, _rx) = mpsc::unbounded_channel();
     download_all(
         state.http.clone(),
-        vec![DownloadTask { url: file.url.clone(), dest, sha1: Some(file.hashes.sha1.clone()), size: Some(file.size) }],
+        vec![DownloadTask {
+            url: file.url.clone(),
+            dest,
+            sha1: Some(file.hashes.sha1.clone()),
+            size: Some(file.size),
+        }],
         DownloaderConfig::default(),
         tx,
     )
@@ -106,7 +146,11 @@ pub async fn shaders_install(state: tauri::State<'_, AppState>, instance_id: Str
 /// Устанавливает активный шейдер (None = отключить шейдеры).
 #[tauri::command]
 #[specta::specta]
-pub fn shaders_set_active(state: tauri::State<'_, AppState>, instance_id: String, project_id: Option<String>) -> Result<()> {
+pub fn shaders_set_active(
+    state: tauri::State<'_, AppState>,
+    instance_id: String,
+    project_id: Option<String>,
+) -> Result<()> {
     let db = state.db.lock().expect("db mutex poisoned");
 
     // Проверяем, что шейдер установлен (если указан)
@@ -120,13 +164,15 @@ pub fn shaders_set_active(state: tauri::State<'_, AppState>, instance_id: String
             .unwrap_or(false);
 
         if !exists {
-            return Err(DreamError::Other(format!("шейдер {pid} не установлен в этот инстанс")));
+            return Err(DreamError::Other(format!(
+                "шейдер {pid} не установлен в этот инстанс"
+            )));
         }
     }
 
     db.execute(
         "UPDATE instances SET active_shader_id = ?1 WHERE id = ?2",
-        rusqlite::params![project_id, instance_id]
+        rusqlite::params![project_id, instance_id],
     )?;
 
     Ok(())
@@ -134,7 +180,11 @@ pub fn shaders_set_active(state: tauri::State<'_, AppState>, instance_id: String
 
 #[tauri::command]
 #[specta::specta]
-pub fn shaders_remove(state: tauri::State<'_, AppState>, instance_id: String, project_id: String) -> Result<()> {
+pub fn shaders_remove(
+    state: tauri::State<'_, AppState>,
+    instance_id: String,
+    project_id: String,
+) -> Result<()> {
     let (slug, _, _) = instance_row(&state, &instance_id)?;
     let shaderpacks_dir = state.paths.instance_game_dir(&slug).join("shaderpacks");
 
@@ -159,12 +209,12 @@ pub fn shaders_remove(state: tauri::State<'_, AppState>, instance_id: String, pr
         // Если это активный шейдер - деактивируем
         db.execute(
             "UPDATE instances SET active_shader_id = NULL WHERE id = ?1 AND active_shader_id = ?2",
-            [&instance_id, &project_id]
+            [&instance_id, &project_id],
         )?;
 
         db.execute(
             "DELETE FROM installed_content WHERE instance_id = ?1 AND project_id = ?2",
-            [&instance_id, &project_id]
+            [&instance_id, &project_id],
         )?;
     }
 
@@ -179,8 +229,13 @@ mod tests {
     #[ignore]
     async fn searches_real_shaders_from_modrinth() {
         let client = reqwest::Client::new();
-        let result = modrinth::search_shaders(&client, "BSL", "1.21.1", 20, 0).await.expect("поиск должен пройти");
+        let result = modrinth::search_shaders(&client, "BSL", "1.21.1", 20, 0)
+            .await
+            .expect("поиск должен пройти");
         assert!(result.total_hits > 0);
-        assert!(result.hits.iter().any(|h| h.title.contains("BSL") || h.title.contains("Shaders")));
+        assert!(result
+            .hits
+            .iter()
+            .any(|h| h.title.contains("BSL") || h.title.contains("Shaders")));
     }
 }

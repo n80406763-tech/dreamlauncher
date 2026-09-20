@@ -45,7 +45,10 @@ pub fn run() {
 
     #[cfg(debug_assertions)]
     specta_builder
-        .export(specta_typescript::Typescript::default(), "../src/ipc/bindings.ts")
+        .export(
+            specta_typescript::Typescript::default(),
+            "../src/ipc/bindings.ts",
+        )
         .expect("не удалось экспортировать TypeScript-биндинги для IPC");
 
     // Однократный неинтерактивный прогон только ради экспорта биндингов —
@@ -55,6 +58,8 @@ pub fn run() {
     }
 
     tauri::Builder::default()
+        .plugin(tauri_plugin_updater::Builder::new().build())
+        .plugin(tauri_plugin_process::init())
         .plugin(tauri_plugin_single_instance::init(|app, _args, _cwd| {
             // Кто-то запустил второй экземпляр — просто поднимаем существующее окно.
             if let Some(window) = app.get_webview_window("main") {
@@ -69,10 +74,16 @@ pub fn run() {
         .invoke_handler(specta_builder.invoke_handler())
         .setup(move |app| {
             if cfg!(debug_assertions) {
-                app.handle().plugin(tauri_plugin_log::Builder::default().level(log::LevelFilter::Info).build())?;
+                app.handle().plugin(
+                    tauri_plugin_log::Builder::default()
+                        .level(log::LevelFilter::Info)
+                        .build(),
+                )?;
             }
 
-            let state = AppState::init().map_err(|e| -> Box<dyn std::error::Error> { Box::new(std::io::Error::other(e.to_string())) })?;
+            let state = AppState::init().map_err(|e| -> Box<dyn std::error::Error> {
+                Box::new(std::io::Error::other(e.to_string()))
+            })?;
             app.manage(state);
 
             Ok(())

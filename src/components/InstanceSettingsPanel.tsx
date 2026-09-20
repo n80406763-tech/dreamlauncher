@@ -4,8 +4,9 @@ import { useOpenInstanceFolder, useUpdateInstance } from "../hooks/queries";
 import type { InstanceDto } from "../ipc/client";
 import { ModsPanel } from "./ModsPanel";
 import { ShadersPanel } from "./ShadersPanel";
+import { CrashesPanel } from "./CrashesPanel";
 
-type InstanceTab = "settings" | "mods" | "shaders";
+type InstanceTab = "settings" | "mods" | "shaders" | "crashes";
 
 /// RAM и JVM-аргументы инстанса — правится тут; версия игры/загрузчик не
 /// редактируются (см. `UpdateInstanceRequest` на бэкенде: это фактически
@@ -55,6 +56,16 @@ export function InstanceSettingsPanel({ inst }: { inst: InstanceDto }) {
         >
           Шейдеры
         </button>
+        <button
+          className={`px-3 py-2 text-sm ${activeTab === "crashes" ? "font-bold" : ""}`}
+          style={{
+            color: activeTab === "crashes" ? "var(--danger-hi)" : "var(--text-dim)",
+            borderBottom: activeTab === "crashes" ? "2px solid var(--danger-hi)" : "none"
+          }}
+          onClick={() => setActiveTab("crashes")}
+        >
+          Вылеты
+        </button>
       </div>
 
       {/* Содержимое вкладок */}
@@ -96,6 +107,7 @@ export function InstanceSettingsPanel({ inst }: { inst: InstanceDto }) {
 
       {activeTab === "mods" && <ModsPanel instanceId={inst.id} />}
       {activeTab === "shaders" && <ShadersPanel instanceId={inst.id} />}
+      {activeTab === "crashes" && <CrashesPanel instanceId={inst.id} />}
     </div>
   );
 }
