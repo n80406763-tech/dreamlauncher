@@ -40,7 +40,7 @@ export const useI18nStore = create<I18nStore>((set, get) => ({
   setLang: (lang) => set({ lang }),
   t: (key) => {
     const entry = translations[key];
-    if (!entry) return key;
+    if (!entry) return String(key);
     return entry[get().lang];
   },
 }));

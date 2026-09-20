@@ -58,6 +58,8 @@ export const api = {
   shadersInstall: (instanceId: string, projectId: string) => unwrap(commands.shadersInstall(instanceId, projectId)),
   shadersSetActive: (instanceId: string, projectId: string | null) => unwrap(commands.shadersSetActive(instanceId, projectId)),
   shadersRemove: (instanceId: string, projectId: string) => unwrap(commands.shadersRemove(instanceId, projectId)),
+  crashesList: (instanceId: string) => unwrap(commands.crashesList(instanceId)),
+  crashRead: (path: string) => unwrap(commands.crashRead(path)),
 };
 
 export type {
@@ -74,4 +76,5 @@ export type {
   InstalledModDto,
   InstalledShaderDto,
   ShaderSearchResultDto,
+  CrashReportDto,
 } from "./bindings";

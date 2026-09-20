@@ -78,7 +78,7 @@ export function SettingsScreen() {
               <div className="text-sm" style={{ color: "var(--text-hi)" }}>Язык интерфейса</div>
               <div className="text-xs" style={{ color: "var(--text-dim)" }}>Выберите язык / Select language</div>
             </div>
-            <select className="field" onChange={(e) => {}} defaultValue="ru">
+            <select className="field" onChange={(_e) => {}} defaultValue="ru">
               <option value="ru">Русский</option>
               <option value="en">English</option>
             </select>
@@ -113,7 +113,7 @@ export function SettingsScreen() {
                 if (update) {
                   const yes = await ask(`Доступно обновление ${update.version}.\n\nХотите установить его сейчас?`, { title: "Обновление", kind: "info" });
                   if (yes) {
-                    await update.downloadAndInstall((event) => {
+                    await update.downloadAndInstall((_event) => {
                       // could log progress
                     });
                     await relaunch();
