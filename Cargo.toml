@@ -1,0 +1,13 @@
+[workspace]
+resolver = "2"
+members = [
+  "src-tauri",
+  "crates/dream-core",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.85"
+authors = ["DreamLauncher"]
+license = "MIT"

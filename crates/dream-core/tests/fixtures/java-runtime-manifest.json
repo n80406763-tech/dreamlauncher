@@ -1,0 +1,69 @@
+{
+  "files": {
+    "bin": {
+      "type": "directory"
+    },
+    "bin/api-ms-win-core-console-l1-1-0.dll": {
+      "downloads": {
+        "lzma": {
+          "sha1": "d2383b0da07ec21c15834b00a13d7b4925868acd",
+          "size": 7424,
+          "url": "https://piston-data.mojang.com/v1/objects/d2383b0da07ec21c15834b00a13d7b4925868acd/api-ms-win-core-console-l1-1-0.dll"
+        },
+        "raw": {
+          "sha1": "b4e55947787eb9cdb5998ee1b77c3bd14a35accf",
+          "size": 22136,
+          "url": "https://piston-data.mojang.com/v1/objects/b4e55947787eb9cdb5998ee1b77c3bd14a35accf/api-ms-win-core-console-l1-1-0.dll"
+        }
+      },
+      "executable": true,
+      "type": "file"
+    },
+    "bin/java.exe": {
+      "downloads": {
+        "lzma": {
+          "sha1": "b4d610f2cc9d12d2b9907622eecdc1833d441551",
+          "size": 14407,
+          "url": "https://piston-data.mojang.com/v1/objects/b4d610f2cc9d12d2b9907622eecdc1833d441551/java.exe"
+        },
+        "raw": {
+          "sha1": "38dc560c6ff23b550a9df5b79a7de0d852e6f840",
+          "size": 39424,
+          "url": "https://piston-data.mojang.com/v1/objects/38dc560c6ff23b550a9df5b79a7de0d852e6f840/java.exe"
+        }
+      },
+      "executable": true,
+      "type": "file"
+    },
+    "bin/javaw.exe": {
+      "downloads": {
+        "lzma": {
+          "sha1": "047c086019a8e8c622752ebbddf8f5181ad53498",
+          "size": 14452,
+          "url": "https://piston-data.mojang.com/v1/objects/047c086019a8e8c622752ebbddf8f5181ad53498/javaw.exe"
+        },
+        "raw": {
+          "sha1": "47961a864810ae918b3d3bedb58fbdcdfaad6bdb",
+          "size": 39424,
+          "url": "https://piston-data.mojang.com/v1/objects/47961a864810ae918b3d3bedb58fbdcdfaad6bdb/javaw.exe"
+        }
+      },
+      "executable": true,
+      "type": "file"
+    },
+    "bin/server": {
+      "type": "directory"
+    },
+    "legal/java.desktop/ADDITIONAL_LICENSE_INFO": {
+      "downloads": {
+        "raw": {
+          "sha1": "84d2102ad171863db04e7ee22a259d1f6c5de4a5",
+          "size": 48,
+          "url": "https://piston-data.mojang.com/v1/objects/84d2102ad171863db04e7ee22a259d1f6c5de4a5/ADDITIONAL_LICENSE_INFO"
+        }
+      },
+      "executable": false,
+      "type": "file"
+    }
+  }
+}

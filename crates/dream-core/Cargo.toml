@@ -1,0 +1,40 @@
+[package]
+name = "dream-core"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license.workspace = true
+description = "Core engine for DreamLauncher: metadata, downloads, Java management, mod loaders, launch, mods — no Tauri dependency."
+
+[lib]
+name = "dream_core"
+path = "src/lib.rs"
+
+[dependencies]
+async-trait = "0.1.92"
+chrono = { version = "0.4.45", features = ["serde"] }
+dirs = "6.0.0"
+dunce = "1.0.5"
+futures = "0.3.34"
+hex = "0.4.3"
+keyring = { version = "3.6.3", features = ["windows-native"] }
+md-5 = "0.11.0"
+quick-xml = { version = "0.41.0", features = ["serialize"] }
+reqwest = { version = "0.13.4", default-features = false, features = ["json", "rustls", "stream", "gzip"] }
+rusqlite = { version = "0.40.2", features = ["bundled", "chrono", "uuid"] }
+serde = { version = "1.0.229", features = ["derive"] }
+serde_json = "1.0.151"
+sha1 = "0.11.0"
+sysinfo = "0.36.1"
+thiserror = "2.0.20"
+tokio = { version = "1.53.1", features = ["rt-multi-thread", "macros", "fs", "process", "time", "sync"] }
+tracing = "0.1.44"
+urlencoding = "2.1"
+uuid = { version = "1.26.0", features = ["v4", "serde"] }
+zip = "7.2.0"
+
+[dev-dependencies]
+tempfile = "3.27.0"
+tokio = { version = "1.53.1", package = "tokio", features = ["full"] }
+wiremock = "0.6.5"

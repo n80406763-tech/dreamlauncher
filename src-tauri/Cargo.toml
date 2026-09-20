@@ -1,0 +1,45 @@
+[package]
+name = "dreamlauncher"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license.workspace = true
+description = "DreamLauncher — лаунчер Minecraft: Java Edition"
+
+[lib]
+name = "dreamlauncher_lib"
+# Только "rlib": сборка десктопная, без мобильных таргетов — "staticlib"/
+# "cdylib" не нужны (они требуются лишь для FFI-обёрток на iOS/Android)
+# и мешают тестовому харнессу на Windows (STATUS_ENTRYPOINT_NOT_FOUND из-за
+# лишнего cdylib-артефакта рядом с тестовым exe).
+crate-type = ["rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2.6.3", features = [] }
+
+[dependencies]
+dream-core = { path = "../crates/dream-core" }
+serde_json = "1.0"
+serde = { version = "1.0", features = ["derive"] }
+log = "0.4"
+chrono = "0.4"
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "sync"] }
+tauri = { version = "2.11.3", features = [] }
+tauri-plugin-log = "2"
+tauri-plugin-shell = "2"
+tauri-plugin-dialog = "2"
+tauri-plugin-fs = "2"
+tauri-plugin-opener = "2"
+tauri-plugin-single-instance = "2"
+tauri-plugin-window-state = "2"
+tauri-specta = { version = "2.0.0-rc.21", features = ["typescript"] }
+specta-typescript = "0.0.12"
+uuid = { version = "1.26.0", features = ["v4"] }
+rusqlite = { version = "0.40.2", features = ["bundled", "chrono", "uuid"] }
+specta = { version = "2.0.0-rc.25", features = ["derive"] }
+thiserror = "2.0.20"
+reqwest = { version = "0.13.4", default-features = false, features = ["json", "rustls", "stream", "gzip", "query"] }
+
+[dev-dependencies]
+tempfile = "3.27.0"

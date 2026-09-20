@@ -1,0 +1,68 @@
+/*
+ * Design tokens — единственное место, где определены цвета/отступы/тайминги.
+ * Тёмная тема — основная и единственная в v1 (см. план, раздел 5); светлая
+ * добавляется позже переопределением этих же переменных под
+ * `:root[data-theme="light"]` — компоненты трогать не придётся.
+ */
+
+:root {
+  /* Сетка кратна 4px, чтобы пиксельный шрифт и бевелы не "плыли". */
+  --u: 4px;
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-6: 24px;
+  --sp-8: 32px;
+  --sp-12: 48px;
+
+  /* Палитра "глубокий космос". */
+  --bg-void: #020306;
+  --bg-stone: #0a0c1a;
+  --bg-stone-2: #14162e;
+  --bg-slot: #050610;
+
+  --edge-light: #23284f;
+  --edge-dark: #010103;
+
+  --text-hi: #f2f5fa;
+  --text: #bbc4d9;
+  --text-dim: #6b7a9e;
+
+  --accent: #6b3ce2;
+  --accent-hi: #8958ea;
+  --accent-press: #4c28a5;
+  --danger: #d92d4f;
+  --danger-hi: #e84b6a;
+  --warn: #e6a817;
+  --info: #00d2ff;
+  --xp: #00ffcc;
+
+  --shadow-drop: 2px 2px 0 rgba(0, 0, 0, 0.8);
+
+  --dur-fast: 80ms;
+  --dur: 120ms;
+  --dur-slow: 150ms;
+
+  --font-pixel: "Monocraft", "Courier New", monospace;
+  --font-ui: "Inter", -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", "Consolas", monospace;
+
+  --titlebar-height: 36px;
+  --radius: 0px; /* сознательно: пиксельная эстетика без скруглений */
+}
+
+/* На случай, если светлую тему включат раньше, чем она будет
+   спроектирована — не должно быть визуального провала до появления
+   собственных light-значений. */
+:root[data-theme="light"] {
+  --bg-void: #e9e6df;
+  --bg-stone: #d8d3c8;
+  --bg-stone-2: #c7c1b3;
+  --bg-slot: #b8b2a3;
+  --edge-light: #f2efe8;
+  --edge-dark: #8a8478;
+  --text-hi: #16140f;
+  --text: #2c2a24;
+  --text-dim: #5b574c;
+}

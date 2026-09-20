@@ -1,0 +1,62 @@
+{
+  "latest": {
+    "release": "26.2",
+    "snapshot": "26.3-snapshot-10"
+  },
+  "versions": [
+    {
+      "id": "26.2",
+      "type": "release",
+      "url": "https://piston-meta.mojang.com/v1/packages/f9e9e12c8b96ea9e04b7f87e36583a6ba0e2e9e6/26.2.json",
+      "time": "2026-08-25T06:43:46+00:00",
+      "releaseTime": "2026-06-16T12:03:33+00:00",
+      "sha1": "f9e9e12c8b96ea9e04b7f87e36583a6ba0e2e9e6",
+      "complianceLevel": 1
+    },
+    {
+      "id": "26.1",
+      "type": "release",
+      "url": "https://piston-meta.mojang.com/v1/packages/169f1ee4714af41b77897b683537fde2b4b9fce9/26.1.json",
+      "time": "2026-08-25T06:42:06+00:00",
+      "releaseTime": "2026-03-24T12:11:04+00:00",
+      "sha1": "169f1ee4714af41b77897b683537fde2b4b9fce9",
+      "complianceLevel": 1
+    },
+    {
+      "id": "1.21.1",
+      "type": "release",
+      "url": "https://piston-meta.mojang.com/v1/packages/7d538f57bd7f3d0638755fa605a432494e736db3/1.21.1.json",
+      "time": "2026-08-25T06:31:47+00:00",
+      "releaseTime": "2024-08-08T12:24:45+00:00",
+      "sha1": "7d538f57bd7f3d0638755fa605a432494e736db3",
+      "complianceLevel": 1
+    },
+    {
+      "id": "1.12.2",
+      "type": "release",
+      "url": "https://piston-meta.mojang.com/v1/packages/832d95b9f40699d4961394dcf6cf549e65f15dc5/1.12.2.json",
+      "time": "2023-06-07T11:49:20+00:00",
+      "releaseTime": "2017-09-18T08:39:46+00:00",
+      "sha1": "832d95b9f40699d4961394dcf6cf549e65f15dc5",
+      "complianceLevel": 0
+    },
+    {
+      "id": "1.7.10",
+      "type": "release",
+      "url": "https://piston-meta.mojang.com/v1/packages/ed5d8789ed29872ea2ef1c348302b0c55e3f3468/1.7.10.json",
+      "time": "2021-12-15T15:44:05+00:00",
+      "releaseTime": "2014-05-14T17:29:23+00:00",
+      "sha1": "ed5d8789ed29872ea2ef1c348302b0c55e3f3468",
+      "complianceLevel": 0
+    },
+    {
+      "id": "1.6.4",
+      "type": "release",
+      "url": "https://piston-meta.mojang.com/v1/packages/b71bae449192fbbe1582ff32fb3765edf0b9b0a8/1.6.4.json",
+      "time": "2019-06-28T07:06:16+00:00",
+      "releaseTime": "2013-09-19T15:52:37+00:00",
+      "sha1": "b71bae449192fbbe1582ff32fb3765edf0b9b0a8",
+      "complianceLevel": 0
+    }
+  ]
+}

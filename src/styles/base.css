@@ -1,0 +1,79 @@
+@font-face {
+  font-family: "Monocraft";
+  src: url("../assets/fonts/Monocraft.ttf") format("truetype");
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Monocraft";
+  src: url("../assets/fonts/Monocraft-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-display: swap;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg-void);
+  color: var(--text);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  line-height: 1.5;
+  overflow: hidden; /* лейаут держит прокрутку сам, окно без рамки не должно скроллиться целиком */
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Поля ввода, текстовые области логов и т.п. — обычный выбор текста нужен. */
+input,
+textarea,
+[data-selectable] {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+img {
+  image-rendering: pixelated;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-slot);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--bg-stone-2);
+  border: 2px solid var(--bg-slot);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--edge-light);
+}
+
+:focus-visible {
+  outline: 2px solid var(--warn);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}

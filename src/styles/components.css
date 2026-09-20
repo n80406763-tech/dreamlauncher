@@ -1,0 +1,244 @@
+/*
+ * Атомы дизайн-системы, реализованные чистым CSS (bevel через box-shadow,
+ * без PNG-текстур) — см. план, раздел 5. Ступенчатые transition (steps())
+ * вместо ease — это то, что делает интерфейс "майнкрафтовым" без единой
+ * картинки.
+ */
+
+.panel {
+  background: var(--bg-stone);
+  border: 2px solid var(--bg-void);
+  box-shadow:
+    inset 2px 2px 0 var(--edge-light),
+    inset -2px -2px 0 var(--edge-dark);
+  padding: var(--sp-4);
+}
+
+.panel--raised {
+  background: var(--bg-stone-2);
+}
+
+.btn {
+  font-family: var(--font-pixel);
+  font-size: 13px;
+  letter-spacing: 0.5px;
+  color: var(--text-hi);
+  background: var(--bg-stone-2);
+  border: none;
+  padding: var(--sp-3) var(--sp-4);
+  cursor: pointer;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  box-shadow:
+    inset 2px 2px 0 var(--edge-light),
+    inset -2px -2px 0 var(--edge-dark);
+  transition:
+    filter var(--dur-fast) steps(2),
+    transform var(--dur-fast) steps(2);
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.btn:hover:not(:disabled) {
+  filter: brightness(1.12);
+}
+
+.btn:active:not(:disabled) {
+  box-shadow:
+    inset -2px -2px 0 var(--edge-light),
+    inset 2px 2px 0 var(--edge-dark);
+  transform: translate(1px, 1px);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn--primary {
+  background: var(--accent);
+}
+.btn--primary:hover:not(:disabled) {
+  background: var(--accent-hi);
+}
+.btn--primary:active:not(:disabled) {
+  background: var(--accent-press);
+}
+
+.btn--danger {
+  background: var(--danger);
+}
+.btn--danger:hover:not(:disabled) {
+  background: var(--danger-hi);
+}
+
+.btn--ghost {
+  background: transparent;
+  box-shadow: none;
+}
+.btn--ghost:hover:not(:disabled) {
+  background: var(--bg-stone-2);
+  box-shadow:
+    inset 2px 2px 0 var(--edge-light),
+    inset -2px -2px 0 var(--edge-dark);
+}
+.btn--ghost:active:not(:disabled) {
+  transform: none;
+}
+
+.btn--sm {
+  padding: var(--sp-1) var(--sp-2);
+  font-size: 11px;
+}
+
+.slot {
+  width: 40px;
+  height: 40px;
+  background: var(--bg-slot);
+  box-shadow:
+    inset 2px 2px 0 var(--edge-dark),
+    inset -2px -2px 0 var(--edge-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.slot--lg {
+  width: 56px;
+  height: 56px;
+}
+
+.progress {
+  height: 16px;
+  background: var(--bg-slot);
+  box-shadow:
+    inset 2px 2px 0 var(--edge-dark),
+    inset -2px -2px 0 var(--edge-light);
+  overflow: hidden;
+  position: relative;
+}
+
+.progress__fill {
+  height: 100%;
+  background: repeating-linear-gradient(90deg, var(--xp) 0 4px, #6bc72f 4px 8px);
+  transition: width var(--dur-slow) steps(8);
+}
+
+.titlebar {
+  /* Перетаскивание окна — через атрибут `data-tauri-drag-region` в
+     TitleBar.tsx, а не CSS `-webkit-app-region` (WebView2 его не читает,
+     это Electron/Chromium-специфичное свойство). */
+  height: var(--titlebar-height);
+  background: var(--bg-void);
+  border-bottom: 1px solid var(--bg-stone-2);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.titlebar__controls {
+  display: flex;
+}
+
+.titlebar__btn {
+  width: 46px;
+  height: var(--titlebar-height);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: background var(--dur-fast) steps(2);
+}
+
+.titlebar__btn:hover {
+  background: var(--bg-stone-2);
+  color: var(--text-hi);
+}
+
+.titlebar__btn--close:hover {
+  background: var(--danger);
+  color: var(--text-hi);
+}
+
+.nav-item {
+  font-family: var(--font-pixel);
+  font-size: 12px;
+  color: var(--text-dim);
+  padding: var(--sp-2) var(--sp-3);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  border-left: 3px solid transparent;
+  transition:
+    background var(--dur-fast) steps(2),
+    color var(--dur-fast) steps(2);
+}
+
+.nav-item:hover {
+  background: var(--bg-stone-2);
+  color: var(--text);
+}
+
+.nav-item--active {
+  color: var(--text-hi);
+  background: var(--bg-stone-2);
+  border-left-color: var(--accent-hi);
+}
+
+.field {
+  font-family: var(--font-ui);
+  background: var(--bg-slot);
+  color: var(--text-hi);
+  border: none;
+  padding: var(--sp-2) var(--sp-3);
+  box-shadow:
+    inset 2px 2px 0 var(--edge-dark),
+    inset -2px -2px 0 var(--edge-light);
+}
+
+.field::placeholder {
+  color: var(--text-dim);
+}
+
+.badge {
+  font-family: var(--font-pixel);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 2px var(--sp-2);
+  background: var(--bg-stone-2);
+  color: var(--text-dim);
+}
+
+.badge--release {
+  color: var(--xp);
+}
+.badge--snapshot {
+  color: var(--warn);
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

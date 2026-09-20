@@ -1,0 +1,102 @@
+[
+  {
+    "game_versions": [
+      "1.21.1"
+    ],
+    "loaders": [
+      "fabric"
+    ],
+    "environment": "client_and_server",
+    "id": "qtRSzbaZ",
+    "project_id": "LOpKHB2A",
+    "author_id": "WE4nCeiO",
+    "featured": false,
+    "name": "21.1.41+fabric-1.21.1",
+    "version_number": "21.1.41+fabric-1.21.1",
+    "changelog": "- Added Redstone Torch modifier to Warp Plates, which prevent it from teleporting\n- Added `allowEveryoneToManageGlobalWaystones` as a simpler alternative to now deprecated `allowedVisibilities`\n- Added world gen tags for new waystone types (empty by default)\n- Fixed invalid visibilities being configurable for `defaultVisibility`\n- Fixed typo in default visibility option\n- Fixed `defaultVisibility` not always being respected\n- Fixed waystones index not being updated with default visibility, resulting in global waystones not appearing immediately\n- Fixed crash with chunk multi-threading mods\n- Fixed integer overflow in xp cost marking waystones wrongly unaffordable when the player has too many levels\n",
+    "changelog_url": null,
+    "date_published": "2026-08-14T07:53:03.073106Z",
+    "downloads": 51164,
+    "version_type": "release",
+    "status": "listed",
+    "requested_status": null,
+    "files": [
+      {
+        "id": "JlcHJfbz",
+        "hashes": {
+          "sha512": "4d2d09d691c36f3eb0977043953c60ce74174a46f29127591e84a62ce82ac4dbdec135e299f34a59b10302b61d4e022db3533e20976b1124d2cace1f458bec12",
+          "sha1": "330d3b23a185e301d95dd54d2e2c7757b64d5ecb"
+        },
+        "url": "https://cdn.modrinth.com/data/LOpKHB2A/versions/qtRSzbaZ/waystones-fabric-1.21.1-21.1.41.jar",
+        "filename": "waystones-fabric-1.21.1-21.1.41.jar",
+        "primary": true,
+        "size": 1242823,
+        "file_type": null
+      }
+    ],
+    "dependencies": [
+      {
+        "version_id": null,
+        "project_id": "P7dR8mSH",
+        "file_name": null,
+        "dependency_type": "required"
+      },
+      {
+        "version_id": null,
+        "project_id": "MBAkmtvl",
+        "file_name": null,
+        "dependency_type": "required"
+      }
+    ]
+  },
+  {
+    "game_versions": [
+      "1.21.1"
+    ],
+    "loaders": [
+      "fabric"
+    ],
+    "environment": "client_and_server",
+    "id": "y2ypoQsG",
+    "project_id": "LOpKHB2A",
+    "author_id": "WE4nCeiO",
+    "featured": false,
+    "name": "21.1.40+fabric-1.21.1",
+    "version_number": "21.1.40+fabric-1.21.1",
+    "changelog": "- Fixed crash with Dynmap integration if it runs before the server instance is captured\n- Fixed waystones being wiped when an event handler throws during loading\n- Fixed integer overflow in distance comparison resulting in wrong results and crashes for large distances\n",
+    "changelog_url": null,
+    "date_published": "2026-08-03T10:25:01.298304Z",
+    "downloads": 30126,
+    "version_type": "release",
+    "status": "listed",
+    "requested_status": null,
+    "files": [
+      {
+        "id": "OIvcFOty",
+        "hashes": {
+          "sha512": "a1a84dcb0f71f3f1b449aa2486ff88a92e2add5796123f487f18914326f326b6460605a02edf1f8fb6a29c6436238fe8fd14d730d87b1889d20bbd36567e595d",
+          "sha1": "90963ccd120629bc6f58ad9c9d694637d0f049d9"
+        },
+        "url": "https://cdn.modrinth.com/data/LOpKHB2A/versions/y2ypoQsG/waystones-fabric-1.21.1-21.1.40.jar",
+        "filename": "waystones-fabric-1.21.1-21.1.40.jar",
+        "primary": true,
+        "size": 1234937,
+        "file_type": null
+      }
+    ],
+    "dependencies": [
+      {
+        "version_id": null,
+        "project_id": "P7dR8mSH",
+        "file_name": null,
+        "dependency_type": "required"
+      },
+      {
+        "version_id": null,
+        "project_id": "MBAkmtvl",
+        "file_name": null,
+        "dependency_type": "required"
+      }
+    ]
+  }
+]
