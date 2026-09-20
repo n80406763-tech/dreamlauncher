@@ -11,11 +11,11 @@ export function CrashesPanel({ instanceId }: { instanceId: string }) {
 
   const fetchCrashes = async () => {
     setLoading(true);
-    const res = await api.crashesList(instanceId);
-    if (res.status === "ok") {
-      setCrashes(res.data);
-    } else {
-      await message(`Ошибка загрузки отчетов: ${res.error.message}`, { title: "Ошибка", kind: "error" });
+    try {
+      const data = await api.crashesList(instanceId);
+      setCrashes(data);
+    } catch (e: any) {
+      await message(`Ошибка загрузки отчетов: ${e.message}`, { title: "Ошибка", kind: "error" });
     }
     setLoading(false);
   };
@@ -25,11 +25,11 @@ export function CrashesPanel({ instanceId }: { instanceId: string }) {
   }, [instanceId]);
 
   const readCrash = async (path: string) => {
-    const res = await api.crashRead(path);
-    if (res.status === "ok") {
-      await message(res.data, { title: "Крэш-репорт", kind: "info" });
-    } else {
-      await message(`Ошибка чтения: ${res.error.message}`, { title: "Ошибка", kind: "error" });
+    try {
+      const data = await api.crashRead(path);
+      await message(data, { title: "Крэш-репорт", kind: "info" });
+    } catch (e: any) {
+      await message(`Ошибка чтения: ${e.message}`, { title: "Ошибка", kind: "error" });
     }
   };
 
